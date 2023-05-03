@@ -4,6 +4,7 @@ import io.mazurco066.courses.api.model.Bank
 import io.mazurco066.courses.api.service.BankService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -54,5 +55,13 @@ class BankController(
         @RequestBody bank: Bank
     ): Bank {
         return service.updateBank(accountNumber, bank)
+    }
+
+    @DeleteMapping("/{accountNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteBank(
+        @PathVariable accountNumber: String
+    ): Unit {
+        return service.deleteBank(accountNumber)
     }
 }

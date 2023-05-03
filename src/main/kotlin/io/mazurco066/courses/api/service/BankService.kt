@@ -23,4 +23,8 @@ class BankService(
     fun updateBank(accountNumber: String, bank: Bank): Bank {
         return dataSource.updateBank(accountNumber, bank)
     }
+
+    fun deleteBank(accountNumber: String) {
+        return dataSource.deleteBank(accountNumber)
+    }
 }
