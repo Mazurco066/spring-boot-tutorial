@@ -17,6 +17,10 @@ class BankService(
     }
 
     fun addBank(bank: Bank): Bank {
-        return  dataSource.addBank(bank)
+        return dataSource.addBank(bank)
+    }
+
+    fun updateBank(accountNumber: String, bank: Bank): Bank {
+        return dataSource.updateBank(accountNumber, bank)
     }
 }

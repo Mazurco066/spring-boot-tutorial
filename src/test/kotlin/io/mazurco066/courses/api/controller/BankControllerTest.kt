@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 
 @SpringBootTest
@@ -114,6 +115,86 @@ class BankControllerTest(
             mockMvc.post("/api/banks") {
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(invalidBank)
+            }
+                .andDo { print() }
+                .andExpect {
+                    status { isBadRequest() }
+                }
+        }
+    }
+
+    @Nested
+    @DisplayName("PATCH /api/banks/{accountNumber}")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class UpdateBank {
+        @Test
+        fun `should return the updated bank with given account number`() {
+            // given
+            val accountNumber = "1234"
+            val updatedBank = Bank(accountNumber, 1.1, 1)
+
+            // when / then
+            mockMvc.patch("/api/banks/$accountNumber") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(updatedBank)
+            }
+                .andDo { print() }
+                .andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    jsonPath("$.accountNumber") {
+                        value("1234")
+                    }
+                    jsonPath("$.trust") {
+                        value(1.1)
+                    }
+                    jsonPath("$.transactionFee") {
+                        value(1)
+                    }
+                }
+
+            // when / then (confirm updated data)
+            mockMvc.get("/api/banks/${accountNumber}")
+                .andDo { print() }
+                .andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    jsonPath("$.trust") {
+                        value(1.1)
+                    }
+                    jsonPath("$.transactionFee") {
+                        value(1)
+                    }
+                }
+        }
+
+        @Test
+        fun `should return NOT FOUND if the requested bank does not exists`() {
+            // given
+            val accountNumber = "9999"
+            val updatedBank = Bank(accountNumber, 1.1, 1)
+
+            // when / then
+            mockMvc.patch("/api/banks/$accountNumber") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(updatedBank)
+            }
+                .andDo { print() }
+                .andExpect {
+                    status { isNotFound() }
+                }
+        }
+
+        @Test
+        fun `should return BAD REQUEST if the given bank has invalid account number`() {
+            // given
+            val accountNumber = "1234"
+            val updatedBank = Bank("9999", 1.1, 1)
+
+            // when / then
+            mockMvc.patch("/api/banks/$accountNumber") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(updatedBank)
             }
                 .andDo { print() }
                 .andExpect {
