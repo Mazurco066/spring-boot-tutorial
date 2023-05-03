@@ -1,4 +1,4 @@
-package io.mazurco066.courses.api
+package io.mazurco066.courses.api.controller
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
