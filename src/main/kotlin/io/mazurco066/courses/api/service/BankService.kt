@@ -11,4 +11,8 @@ class BankService(
     fun getBanks(): Collection<Bank> {
         return dataSource.getBanks()
     }
+
+    fun getBank(accountNumber: String): Bank {
+        return dataSource.getBank(accountNumber)
+    }
 }

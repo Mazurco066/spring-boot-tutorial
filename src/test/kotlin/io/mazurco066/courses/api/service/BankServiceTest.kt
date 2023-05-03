@@ -17,10 +17,22 @@ class BankServiceTest {
         every { dataSource.getBanks() } returns emptyList()
 
         // when
-        val banks = bankService.getBanks()
+        bankService.getBanks()
 
         // then
         verify(exactly = 1) { dataSource.getBanks() }
     }
 
+    @Test
+    fun `should call its data source to retrieve a single bank`() {
+        // given
+        val accountNumber = "1234"
+        every { dataSource.getBanks() } returns emptyList()
+
+        // when
+        bankService.getBank(accountNumber)
+
+        // then
+        verify(exactly = 1) { dataSource.getBank(accountNumber) }
+    }
 }

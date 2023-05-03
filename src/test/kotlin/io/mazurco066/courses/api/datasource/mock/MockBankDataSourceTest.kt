@@ -25,4 +25,19 @@ class MockBankDataSourceTest {
         assertThat(banks).anyMatch { it.trust != 0.0 }
         assertThat(banks).anyMatch { it.transactionFee != 0 }
     }
+
+    @Test
+    fun `should provide a requested bank`() {
+        // given
+        val accountNumber = "1234"
+
+        // when
+        val bank = mockDataSource.getBank(accountNumber)
+
+        // then
+        assertThat(bank).isNotNull
+        assertThat(bank.accountNumber).isEqualTo("1234")
+        assertThat(bank.trust).isEqualTo(3.14)
+        assertThat(bank.transactionFee).isEqualTo(17)
+    }
 }
